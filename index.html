@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>G · Assistente 5S</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1c2230;--muted:#5d6676;--line:#e2e5ea;--pri:#1f5fbf;--pri2:#e8f0fc;
+--s1:#c0392b;--s2:#d68910;--s3:#1e8449;--s4:#2471a3;--s5:#7d3c98}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+header{background:#14213d;color:#fff;padding:22px 18px}
+header h1{margin:0;font-size:1.3rem}
+header p{margin:4px 0 0;opacity:.8;font-size:.9rem}
+main{max-width:860px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+h2{font-size:1.05rem;margin:0 0 4px}
+.sub{color:var(--muted);font-size:.88rem;margin:0 0 12px}
+.step{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--pri);color:#fff;font-size:.8rem;margin-right:8px}
+textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;min-height:110px;resize:vertical}
+textarea:disabled{background:#f4f5f7}
+.sensos{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
+.senso{border:2px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;background:#fff;text-align:left;font:inherit}
+.senso b{display:block;font-size:.98rem}
+.senso small{color:var(--muted);font-size:.8rem}
+.senso.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 7%,#fff)}
+.senso.on b{color:var(--c)}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button.b{font:inherit;font-weight:600;border:0;border-radius:8px;padding:11px 16px;cursor:pointer;background:var(--pri);color:#fff}
+button.b:disabled{opacity:.45;cursor:default}
+button.b.sec{background:var(--pri2);color:var(--pri)}
+button.b.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.res{display:none}
+.aviso{background:#fff8e6;border:1px solid #f3d98b;border-radius:10px;padding:10px 12px;font-size:.88rem;margin-bottom:12px}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:99px;color:#fff;margin:0 6px 4px 0}
+.tag.m{background:#5d6676}.tag.c{background:#a04000}
+.block{border-left:4px solid var(--pri);padding:8px 12px;margin:12px 0;background:#fafbfc;border-radius:0 8px 8px 0}
+.block h3{margin:0 0 2px;font-size:.9rem;text-transform:uppercase;letter-spacing:.04em;color:var(--pri)}
+.block .q{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.block ul{margin:4px 0 0;padding-left:20px}
+.block li{margin-bottom:3px}
+[contenteditable]{outline:none}
+[contenteditable]:focus{background:#fffbe8}
+.nota{background:#fdebd0;padding:0 3px;border-radius:3px;font-weight:600}
+.hint{font-size:.82rem;color:var(--muted);margin-top:6px}
+.hist-item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;font-size:.88rem}
+.hist-item .top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.hist-item .top span{color:var(--muted);font-size:.8rem}
+.hist-item button{font:inherit;font-size:.8rem;border:0;background:none;color:var(--pri);cursor:pointer;padding:0;margin-right:10px}
+.intro{display:flex;gap:14px;align-items:flex-start;background:linear-gradient(135deg,#eef3fd,#fff)}
+.avatar{flex:0 0 52px;height:52px;border-radius:50%;background:#1f5fbf;color:#fff;font-weight:700;font-size:1.5rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(31,95,191,.3)}
+.bubble p{margin:0 0 8px}.bubble p:last-child{margin:0}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#14213d;color:#fff;padding:10px 16px;border-radius:8px;font-size:.88rem;opacity:0;transition:.25s;pointer-events:none}
+.toast.on{opacity:1}
+pre.copybox{display:none;white-space:pre-wrap;font-size:.8rem;background:#f4f5f7;padding:10px;border-radius:8px;max-height:220px;overflow:auto}
+.empty{color:var(--muted);font-size:.88rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>G · Assistente 5S</h1>
+  <p>Planos de ação para tratativas de não conformidade</p>
+</header>
+<main>
+<section class="card intro">
+  <div class="avatar">G</div>
+  <div class="bubble">
+    <p><b>Olá, eu sou a G</b>, sua assistente na criação dos planos de ação para as tratativas de não conformidade.</p>
+    <p>Como posso te ajudar? Me conte de qual senso é a não conformidade e o que foi encontrado. Eu te devolvo uma sugestão de <b>causa</b>, <b>o quê</b> e <b>como</b>.</p>
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="step">1</span>De qual senso veio esta não conformidade?</h2>
+  <p class="sub">Selecione o senso em que a não conformidade foi apontada.</p>
+  <div class="sensos" id="sensos">
+    <button type="button" class="senso" data-s="1" style="--c:var(--s1)"><b>1º Seleção</b></button>
+    <button type="button" class="senso" data-s="2" style="--c:var(--s2)"><b>2º Ordenação</b></button>
+    <button type="button" class="senso" data-s="3" style="--c:var(--s3)"><b>3º Limpeza</b></button>
+    <button type="button" class="senso" data-s="4" style="--c:var(--s4)"><b>4º Bem-estar</b></button>
+    <button type="button" class="senso" data-s="5" style="--c:var(--s5)"><b>5º Autodisciplina</b></button>
+  </div>
+</section>
+
+<section class="card">
+  <h2><span class="step">2</span>Qual é a não conformidade?</h2>
+  <p class="sub">Descreva o que foi encontrado, do jeito que está no local.</p>
+  <textarea id="nc" disabled placeholder="Selecione o senso primeiro…"></textarea>
+  <div class="btns">
+    <button class="b" id="gerar" disabled>Gerar sugestão</button>
+    <button class="b ghost" id="limpar">Limpar</button>
+  </div>
+</section>
+
+<section class="card res" id="res">
+  <h2>Sugestão de tratativa</h2>
+  <div class="aviso"><b>Esta é a minha sugestão para a tratativa.</b> Revise, ajuste ao que você viu no local e complete o número da nota, quando houver. Toque em qualquer texto para editar.</div>
+  <div id="resHead"></div>
+  <div class="block"><h3>Causa</h3><div class="q">O que aconteceu para a não conformidade estar assim?</div><div id="causa" contenteditable="true"></div></div>
+  <div class="block"><h3>O quê</h3><div class="q">O que será feito para eliminar a não conformidade e voltar ao padrão?</div><div id="oque" contenteditable="true"></div></div>
+  <div class="block"><h3>Como</h3><div class="q">Como será feito para o local voltar ao padrão?</div><div id="como" contenteditable="true"></div></div>
+  <div class="btns">
+    <button class="b" id="salvar">Salvar no histórico</button>
+    <button class="b sec" id="copiar">Copiar texto</button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Histórico (neste aparelho)</h2>
+  <div id="hist" style="margin-top:10px"><p class="empty">Nenhuma ocorrência salva ainda.</p></div>
+  <div class="btns">
+    <button class="b sec" id="copiarTodos">Copiar tudo (planilha)</button>
+    <button class="b ghost" id="apagarTodos">Apagar histórico</button>
+  </div>
+  <div class="hint">"Copiar tudo" gera texto separado por tabulação. Cole direto no Excel ou no Google Planilhas.</div>
+  <pre class="copybox" id="copybox"></pre>
+</section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const NOTA='(Nota nº ________)';
+const SENSOS={
+ 1:{nome:"Seleção",cor:"var(--s1)"},
+ 2:{nome:"Ordenação",cor:"var(--s2)"},
+ 3:{nome:"Limpeza",cor:"var(--s3)"},
+ 4:{nome:"Bem-estar",cor:"var(--s4)"},
+ 5:{nome:"Autodisciplina",cor:"var(--s5)"}
+};
+const RX={
+ manut:/manuten|quebrad|quebrou|defeito|defeituos|vazament|vazando|danificad|não funciona|nao funciona|sem funcionar|estragad|avariad|queimad|travad|trincad|rachad|enferruj|corroí|corroi|desregulad|fio exposto|fiação|fiacao|tomada|disjuntor|lâmpada|lampada|motor|rolamento|correia|vedação|vedacao|mangueira|parafuso solto|solt[ao]|folga|ruído anormal|ruido anormal|barulho|vibra|máquina parada|maquina parada|equipamento parado|goteira|infiltra|piso danificado|buraco/,
+ vazamento:/vazament|vazando|óleo|oleo|graxa|goteira|poça|poca|pingando|escorrendo/,
+ comport:/deixou|deixaram|deixad|esquec|jogou|jogaram|jogad|largou|largad|abandon|descartou|descartad[oa] (errad|incorret|no lugar errado|fora)|lixo|luva|copo|garrafa|marmita|comida|aliment|embalagem|papel|bituca|cigarro|celular|não guard|nao guard|não devolv|nao devolv|não recolh|nao recolh|fora do lugar|em cima d|sobre a bancada|sem epi|sem o epi|sem uso de|sem usar|não usa|nao usa|não utiliz|nao utiliz|não respeit|nao respeit|não cumpr|nao cumpr|não segue|nao segue|não preench|nao preench|sem preench|colaborador|operador|funcionário|funcionario|pessoal/,
+ lixo:/lixo|descart|resíduo|residuo|embalagem|papel|copo|garrafa|bituca|lixeira/,
+ epi:/luva|epi|óculos|oculos|protetor|capacete|máscara|mascara|avental|bota/,
+ ident:/sem identifica|identificação|identificacao|etiqueta|sem placa|placa|demarca|faixa|pintura do piso|endereç|enderec|sem nome|rótulo|rotulo/,
+ obstru:/obstru|corredor|passagem|rota de fuga|saída de emerg|saida de emerg|extintor|hidrante|quadro elétrico|quadro eletrico|na frente d|bloquead/,
+ recorr:/recorrent|novamente|de novo|outra vez|sempre|reincid|repetid|já foi apontad|ja foi apontad/
+};
+const COMPORT_CAUSA="Colaborador não vê a necessidade de cumprir o padrão 5S estabelecido para o local.";
+const BASE={
+ 1:{causa:"Itens sem utilidade permaneceram no local por falta de triagem e descarte após o uso.",
+    oque:"Retirar do local o que não é necessário e manter apenas o que é usado na rotina.",
+    como:"Separar o que é necessário e descartar ou devolver o que não tem uso, conforme a política da empresa."},
+ 2:{causa:"Os itens não possuem local definido e identificado, ou o local definido não foi respeitado após o uso.",
+    oque:"Organizar o local, garantindo um lugar fixo e identificado para cada item.",
+    como:"Definir e identificar um local fixo para cada item e garantir o retorno a ele após o uso."},
+ 3:{causa:"A sujeira não foi removida na rotina de limpeza e a fonte geradora não foi tratada.",
+    oque:"Limpar o local e eliminar ou controlar a fonte da sujeira.",
+    como:"Limpar o local, tratar a fonte da sujeira e garantir que ele esteja na rotina de limpeza."},
+ 4:{causa:"As condições de bem-estar do local não estão sendo mantidas por falta de um padrão definido e acompanhado.",
+    oque:"Restabelecer as condições de bem-estar do local e definir um padrão para mantê-las.",
+    como:"Corrigir a condição encontrada e definir com a equipe o padrão do local, incluindo-o na inspeção 5S."},
+ 5:{causa:COMPORT_CAUSA,
+    oque:"Restabelecer o padrão no local e reforçar com a equipe a importância de cumpri-lo.",
+    como:"Corrigir a condição junto com o colaborador e reforçar o padrão com a equipe em DDS, acompanhando nas próximas inspeções."}
+};
+
+function gerar(senso,texto){
+ const t=texto.toLowerCase(), f={};
+ for(const k in RX) f[k]=RX[k].test(t);
+ const comport=f.comport||senso===5, b=BASE[senso];
+ let causa=[],oque=[],como=[];
+ const add=(a,x)=>{if(!a.includes(x))a.push(x)};
+
+ if(f.obstru){
+  add(causa,"Material colocado em área que deve permanecer livre.");
+  add(oque,"Desobstruir a área e definir local adequado para o material.");
+  add(como,"Desobstruir a área imediatamente e reposicionar o material em local adequado.");
+ }
+ if(f.manut){
+  add(causa,"Falha ou desgaste no equipamento/estrutura que não foi corrigido.");
+  add(oque,`Acionar a manutenção com abertura de nota ${NOTA} para corrigir a falha.`);
+  add(como,(f.vazamento?"Isolar a área e conter o vazamento, abrir":"Abrir")+` nota de manutenção ${NOTA} e acompanhar o atendimento até o encerramento da nota.`);
+ }
+ if(comport){
+  add(causa,COMPORT_CAUSA);
+  add(oque,"Restabelecer o padrão no local e reforçar com a equipe a importância de cumpri-lo.");
+  let extra=f.epi?", além de garantir local de guarda e descarte de luvas/EPIs próximo ao posto":f.lixo?", além de verificar se há lixeira identificada próxima ao posto":"";
+  add(como,`Corrigir a condição junto com o colaborador e reforçar o padrão com a equipe em DDS${extra}.`);
+ }
+ if(f.ident&&!f.manut&&!comport){
+  add(causa,"Identificação ou demarcação ausente/desgastada.");
+  add(oque,"Refazer a identificação/demarcação conforme o padrão.");
+  add(como,"Refazer a identificação/demarcação conforme o padrão visual da empresa.");
+ }
+ if(!causa.length) add(causa,b.causa);
+ if(!oque.length) add(oque,b.oque);
+ if(!como.length) add(como,b.como);
+ if(f.recorr){add(causa,"Por ser reincidência, as ações anteriores não eliminaram a causa.");add(como,"Por ser reincidência, analisar a causa com a equipe (5 Porquês).");}
+ return {causa:causa.join(" "),oque:oque.join(" "),como:como.join(" "),flags:{manut:f.manut,comport}};
+}
+
+/* ===== Interface ===== */
+const $=id=>document.getElementById(id);
+let senso=0,atual=null;
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const destacaNota=s=>esc(s).split(esc(NOTA)).join(`<span class="nota">${esc(NOTA)}</span>`);
+function toast(m){const e=$("toast");e.textContent=m;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2200)}
+
+document.querySelectorAll(".senso").forEach(b=>b.onclick=()=>{
+ senso=+b.dataset.s;
+ document.querySelectorAll(".senso").forEach(x=>x.classList.toggle("on",x===b));
+ $("nc").disabled=false;$("nc").placeholder="Ex.: Colaborador deixou luvas usadas em cima da bancada.";
+ $("gerar").disabled=false;$("nc").focus();
+});
+
+$("gerar").onclick=()=>{
+ const txt=$("nc").value.trim();
+ if(!senso){toast("Selecione o senso primeiro.");return}
+ if(txt.length<5){toast("Descreva a não conformidade.");$("nc").focus();return}
+ const r=gerar(senso,txt);
+ $("resHead").innerHTML=`<span class="tag" style="background:${SENSOS[senso].cor}">${senso}º ${SENSOS[senso].nome}</span>`+
+  (r.flags.manut?`<span class="tag m">Envolve manutenção</span>`:"")+
+  (r.flags.comport?`<span class="tag c">Comportamento / padrão</span>`:"")+
+  `<p style="margin:8px 0 0;font-size:.9rem"><b>Não conformidade:</b> ${esc(txt)}</p>`;
+ $("causa").textContent=r.causa;
+ $("oque").innerHTML=destacaNota(r.oque);
+ $("como").innerHTML=destacaNota(r.como);
+ $("res").style.display="block";
+ atual={senso,txt};
+ $("res").scrollIntoView({behavior:"smooth"});
+};
+
+function capturar(){
+ return {...atual,id:Date.now(),dataFmt:new Date().toLocaleDateString("pt-BR"),
+  causa:$("causa").innerText.trim(),oque:$("oque").innerText.trim(),
+  como:$("como").innerText.trim()};
+}
+const texto=o=>`NÃO CONFORMIDADE 5S — ${o.dataFmt}\nSenso: ${o.senso}º ${SENSOS[o.senso].nome}\nNão conformidade: ${o.txt}\n\nCAUSA: ${o.causa}\n\nO QUÊ: ${o.oque}\n\nCOMO: ${Array.isArray(o.como)?o.como.join(" "):o.como}`;
+async function copiar(s){
+ try{await navigator.clipboard.writeText(s);toast("Copiado!")}
+ catch(e){const b=$("copybox");b.textContent=s;b.style.display="block";toast("Selecione e copie o texto abaixo.")}
+}
+$("copiar").onclick=()=>{if(atual)copiar(texto(capturar()))};
+
+const KEY="aux5s_hist_v3";let mem=[];
+const ler=()=>{try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return mem}};
+const gravar=h=>{mem=h;try{localStorage.setItem(KEY,JSON.stringify(h))}catch(e){}};
+function render(){
+ const h=ler();
+ if(!h.length){$("hist").innerHTML='<p class="empty">Nenhuma ocorrência salva ainda.</p>';return}
+ $("hist").innerHTML=h.map(o=>`<div class="hist-item"><div class="top"><b style="color:${SENSOS[o.senso].cor}">${o.senso}º ${SENSOS[o.senso].nome}</b><span>${o.dataFmt}</span></div>
+ <div style="margin:4px 0 6px">${esc(o.txt)}</div><button data-c="${o.id}">Copiar</button><button data-d="${o.id}">Excluir</button></div>`).join("");
+ $("hist").querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>copiar(texto(ler().find(o=>o.id==b.dataset.c))));
+ $("hist").querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{gravar(ler().filter(o=>o.id!=b.dataset.d));render()});
+}
+$("salvar").onclick=()=>{if(!atual)return;const h=ler();h.unshift(capturar());gravar(h);render();toast("Salvo no histórico.")};
+$("copiarTodos").onclick=()=>{
+ const h=ler();if(!h.length){toast("Histórico vazio.");return}
+ const cab=["Data","Senso","Não conformidade","Causa","O quê","Como"];
+ const L=h.map(o=>[o.dataFmt,`${o.senso}º ${SENSOS[o.senso].nome}`,o.txt,o.causa,o.oque,(Array.isArray(o.como)?o.como.join(" "):o.como)].map(x=>(x||"").replace(/[\t\n]/g," ")).join("\t"));
+ copiar([cab.join("\t"),...L].join("\n"));
+};
+let conf=false;
+$("apagarTodos").onclick=()=>{
+ const b=$("apagarTodos");
+ if(!conf){conf=true;b.textContent="Toque de novo para confirmar";setTimeout(()=>{conf=false;b.textContent="Apagar histórico"},3000);return}
+ gravar([]);render();conf=false;b.textContent="Apagar histórico";toast("Histórico apagado.");
+};
+$("limpar").onclick=()=>{$("nc").value="";senso=0;document.querySelectorAll(".senso").forEach(x=>x.classList.remove("on"));
+ $("nc").disabled=true;$("nc").placeholder="Selecione o senso primeiro…";$("gerar").disabled=true;$("res").style.display="none";window.scrollTo({top:0,behavior:"smooth"})};
+render();
+</script>
+</body>
+</html>
